@@ -73,7 +73,15 @@ class MenuItem extends Model
 
     public function photoUrl(): ?string
     {
-        return $this->photo ? Storage::url($this->photo) : null;
+        if (! $this->photo) {
+            return null;
+        }
+
+        if (! Storage::disk('public')->exists($this->photo)) {
+            return null;
+        }
+
+        return Storage::disk('public')->url($this->photo);
     }
 
     public function formattedPrice(): string

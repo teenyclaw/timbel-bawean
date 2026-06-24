@@ -220,5 +220,7 @@ class DatabaseSeeder extends Seeder
                 ]);
             }
         }
+
+        $this->command?->call('menu:seed-photos');
     }
 }

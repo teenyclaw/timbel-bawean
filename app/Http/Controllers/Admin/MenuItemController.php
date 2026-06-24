@@ -19,6 +19,31 @@ class MenuItemController extends Controller
             ->get();
         $categories = Category::where('outlet_id', $outlet->id)->orderBy('sort_order')->get();
 
+        // #region agent log
+        $itemsWithPhoto = $items->filter(fn ($i) => $i->photo && \Illuminate\Support\Facades\Storage::disk('public')->exists($i->photo));
+        $publicStorageLinked = is_link(public_path('storage')) || is_dir(public_path('storage'));
+        file_put_contents(base_path('debug-b66d57.log'), json_encode([
+            'sessionId' => 'b66d57',
+            'hypothesisId' => 'H1,H2,H4',
+            'location' => 'MenuItemController::index',
+            'message' => 'Menu photo diagnostics',
+            'data' => [
+                'total_items' => $items->count(),
+                'db_with_photo_column' => $items->whereNotNull('photo')->count(),
+                'file_exists_count' => $itemsWithPhoto->count(),
+                'public_storage_linked' => $publicStorageLinked,
+                'app_url' => config('app.url'),
+                'sample' => $items->take(3)->map(fn ($i) => [
+                    'name' => $i->name,
+                    'photo' => $i->photo,
+                    'url' => $i->photoUrl(),
+                    'file_exists' => $i->photo ? \Illuminate\Support\Facades\Storage::disk('public')->exists($i->photo) : false,
+                ])->values()->all(),
+            ],
+            'timestamp' => (int) (microtime(true) * 1000),
+        ])."\n", FILE_APPEND);
+        // #endregion
+
         return view('admin.menu-items.index', compact('outlet', 'items', 'categories'));
     }
 
