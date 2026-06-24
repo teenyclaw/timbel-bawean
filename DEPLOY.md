@@ -85,8 +85,44 @@ php artisan key:generate
 
 ## 4. Install dependency & migrate
 
+### Composer tidak ditemukan (`bash: composer: command not found`)
+
+Di shared hosting cPanel, perintah `composer` sering **tidak ada di PATH**. Ini normal (bukan error project).
+
+**Cek lingkungan dulu (tanpa Composer):**
+
+```bash
+cd ~/bawean
+php scripts/host-env-check.php
+```
+
+**Opsi A — Install Composer di home (paling umum):**
+
+```bash
+cd ~
+curl -sS https://getcomposer.org/installer | php
+php ~/composer.phar install --no-dev --optimize-autoloader -d ~/bawean
+```
+
+**Opsi B — cPanel UI:**
+
+cPanel → **Software** → **Setup PHP Composer** → pilih folder `bawean` → Install.
+
+**Opsi C — Path alternatif (jika ada):**
+
+```bash
+/usr/local/bin/composer install --no-dev --optimize-autoloader -d ~/bawean
+```
+
+**Opsi D — Lewati Composer jika `vendor/` sudah ada:**
+
+Jika `vendor/autoload.php` sudah ada dan `composer.lock` tidak berubah setelah `git pull`, cukup jalankan perintah `php artisan` di bawah.
+
+---
+
 ```bash
 composer install --no-dev --optimize-autoloader
+# atau: php ~/composer.phar install --no-dev --optimize-autoloader -d ~/bawean
 
 php artisan migrate --force
 php artisan db:seed --force   # hanya pertama kali / data demo
@@ -170,6 +206,7 @@ Akun demo (ganti password di production):
 
 | Masalah | Solusi |
 |---------|--------|
+| `composer: command not found` | `php ~/composer.phar install ...` atau cPanel Setup PHP Composer |
 | 500 error | Cek `storage/logs/laravel.log`, permission `storage/` |
 | CSS/JS tidak load | Pastikan `APP_URL` benar & document root = `public/` |
 | Foto menu tidak muncul | `php artisan storage:link` |
