@@ -77,11 +77,22 @@ class MenuItem extends Model
             return null;
         }
 
-        if (! Storage::disk('public')->exists($this->photo)) {
-            return null;
+        $relative = ltrim($this->photo, '/');
+
+        if (\App\Support\PublicStorage::isWebAccessible($relative)) {
+            return \App\Support\PublicStorage::webUrl($relative);
         }
 
-        return Storage::disk('public')->url($this->photo);
+        $storageFile = Storage::disk('public')->path($relative);
+        if (is_file($storageFile)) {
+            \App\Support\PublicStorage::publish($relative);
+
+            if (\App\Support\PublicStorage::isWebAccessible($relative)) {
+                return \App\Support\PublicStorage::webUrl($relative);
+            }
+        }
+
+        return null;
     }
 
     public function formattedPrice(): string

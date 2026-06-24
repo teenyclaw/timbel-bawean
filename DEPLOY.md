@@ -128,7 +128,7 @@ php artisan migrate --force
 php artisan db:seed --force   # hanya pertama kali / data demo
 
 php artisan storage:link
-php artisan menu:seed-photos   # salin foto menu dari assets ke storage (wajib setelah deploy)
+php artisan menu:seed-photos   # salin foto ke storage + public/storage (cPanel tanpa symlink)
 php artisan config:cache
 php artisan route:cache
 php artisan view:cache
@@ -207,7 +207,7 @@ Akun demo (ganti password di production):
 
 | Masalah | Solusi |
 |---------|--------|
-| Foto menu tidak muncul | `php artisan storage:link` lalu `php artisan menu:seed-photos` |
+| Foto menu tidak muncul | Set `APP_URL=https://domain-anda.com`, lalu `php artisan menu:seed-photos --force` |
 | `composer: command not found` | `php ~/composer.phar install ...` atau cPanel Setup PHP Composer |
 | 500 error | Cek `storage/logs/laravel.log`, permission `storage/` |
 | CSS/JS tidak load | Pastikan `APP_URL` benar & document root = `public/` |

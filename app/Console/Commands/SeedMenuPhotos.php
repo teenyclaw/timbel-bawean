@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\MenuItem;
+use App\Support\PublicStorage;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -51,29 +52,44 @@ class SeedMenuPhotos extends Command
 
             $dest = 'menu/' . pathinfo($assetFile, PATHINFO_BASENAME);
             Storage::disk('public')->put($dest, file_get_contents($assetFile));
+            PublicStorage::publish($dest);
             $item->update(['photo' => $dest]);
             $updated++;
         }
 
+        $published = 0;
+        foreach (MenuItem::whereNotNull('photo')->pluck('photo') as $photo) {
+            if (PublicStorage::publish($photo)) {
+                $published++;
+            }
+        }
+
         // #region agent log
+        $sample = MenuItem::whereNotNull('photo')->first();
         file_put_contents(base_path('debug-b66d57.log'), json_encode([
             'sessionId' => 'b66d57',
             'runId' => 'seed-photos',
-            'hypothesisId' => 'H1,H4',
+            'hypothesisId' => 'H1,H2,H4',
             'location' => 'SeedMenuPhotos::handle',
             'message' => 'Menu photo seed completed',
             'data' => [
                 'updated' => $updated,
                 'skipped' => $skipped,
                 'missing' => $missing,
+                'published_to_public' => $published,
                 'with_photo_after' => MenuItem::whereNotNull('photo')->count(),
                 'total_items' => MenuItem::count(),
+                'storage_link' => is_link(public_path('storage')),
+                'app_url' => config('app.url'),
+                'sample_photo' => $sample?->photo,
+                'sample_web_url' => $sample ? PublicStorage::webUrl($sample->photo) : null,
+                'sample_public_exists' => $sample ? PublicStorage::isWebAccessible($sample->photo) : false,
             ],
             'timestamp' => (int) (microtime(true) * 1000),
         ])."\n", FILE_APPEND);
         // #endregion
 
-        $this->info("Photos seeded: {$updated} updated, {$skipped} skipped, {$missing} missing asset.");
+        $this->info("Photos seeded: {$updated} updated, {$skipped} skipped, {$missing} missing asset, {$published} published to public/storage.");
 
         return self::SUCCESS;
     }

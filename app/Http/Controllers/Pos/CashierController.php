@@ -155,6 +155,26 @@ class CashierController extends Controller
             ->orderBy('sort_order')
             ->get();
 
+        // #region agent log
+        $sample = $categories->flatMap->menuItems->merge($uncategorized)->first();
+        file_put_contents(base_path('debug-b66d57.log'), json_encode([
+            'sessionId' => 'b66d57',
+            'hypothesisId' => 'H2,H3,H4',
+            'location' => 'CashierController::menuData',
+            'message' => 'Cashier menu photo URLs',
+            'data' => [
+                'app_url' => config('app.url'),
+                'storage_is_link' => is_link(public_path('storage')),
+                'sample_name' => $sample?->name,
+                'sample_photo_db' => $sample?->photo,
+                'sample_photo_url' => $sample?->photoUrl(),
+                'sample_public_file' => $sample?->photo ? public_path('storage/' . $sample->photo) : null,
+                'sample_public_exists' => $sample?->photo ? is_file(public_path('storage/' . $sample->photo)) : false,
+            ],
+            'timestamp' => (int) (microtime(true) * 1000),
+        ])."\n", FILE_APPEND);
+        // #endregion
+
         return compact('categories', 'uncategorized');
     }
 }
