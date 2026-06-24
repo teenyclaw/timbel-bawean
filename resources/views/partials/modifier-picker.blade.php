@@ -12,7 +12,7 @@
          class="{{ $compact ? '' : 'mt-2' }}">
         <button type="button"
             @click="$dispatch('modifier-picker-open', itemId)"
-            class="{{ $compact ? 'shrink-0 bg-orange-500 text-white text-sm px-3 py-1.5 rounded-lg' : 'w-full bg-orange-500 text-white text-sm px-3 py-2 rounded-lg font-medium' }}">
+            class="{{ $compact ? 'shrink-0 bg-teal-600 hover:bg-teal-700 text-white text-sm px-3 py-1.5 rounded-xl' : 'w-full bg-teal-600 hover:bg-teal-700 text-white text-sm px-3 py-2 rounded-xl font-medium' }}">
             Pilih Varian
         </button>
 
@@ -23,9 +23,9 @@
                 <div class="flex justify-between items-start mb-4">
                     <div>
                         <h3 class="font-bold">{{ $item->name }}</h3>
-                        <p class="text-sm text-stone-500">Dari {{ $item->formattedPrice() }}</p>
+                        <p class="text-sm text-slate-500">Dari {{ $item->formattedPrice() }}</p>
                     </div>
-                    <button type="button" @click="open = false" class="text-stone-400 text-xl leading-none">&times;</button>
+                    <button type="button" @click="open = false" class="text-slate-400 text-xl leading-none">&times;</button>
                 </div>
 
                 <form method="POST" action="{{ $formAction }}" class="space-y-4">
@@ -40,7 +40,7 @@
                             </legend>
                             <div class="space-y-2">
                                 @foreach($group->options as $opt)
-                                    <label class="flex items-center justify-between gap-2 border rounded-lg px-3 py-2 text-sm cursor-pointer hover:border-orange-300">
+                                    <label class="flex items-center justify-between gap-2 border rounded-xl px-3 py-2 text-sm cursor-pointer hover:border-teal-300">
                                         <span class="flex items-center gap-2">
                                             <input
                                                 type="{{ $group->isSingle() ? 'radio' : 'checkbox' }}"
@@ -52,7 +52,7 @@
                                             {{ $opt->name }}
                                         </span>
                                         @if($opt->price_adjustment !== 0)
-                                            <span class="text-stone-500 text-xs">{{ $opt->formattedAdjustment() }}</span>
+                                            <span class="text-slate-500 text-xs">{{ $opt->formattedAdjustment() }}</span>
                                         @endif
                                     </label>
                                 @endforeach
@@ -62,16 +62,16 @@
 
                     <div class="grid grid-cols-2 gap-3">
                         <div>
-                            <label class="text-xs text-stone-500">Qty</label>
-                            <input type="number" name="qty" value="1" min="1" max="99" class="w-full border rounded-lg px-3 py-2">
+                            <label class="text-xs text-slate-500">Qty</label>
+                            <input type="number" name="qty" value="1" min="1" max="99" class="w-full border border-slate-200 rounded-xl px-3 py-2">
                         </div>
                         <div>
-                            <label class="text-xs text-stone-500">Catatan</label>
-                            <input type="text" name="note" placeholder="Opsional" class="w-full border rounded-lg px-3 py-2">
+                            <label class="text-xs text-slate-500">Catatan</label>
+                            <input type="text" name="note" placeholder="Opsional" class="w-full border border-slate-200 rounded-xl px-3 py-2">
                         </div>
                     </div>
 
-                    <button type="submit" class="w-full bg-orange-500 text-white font-semibold py-3 rounded-xl">Tambah ke Keranjang</button>
+                    <button type="submit" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-semibold py-3 rounded-xl">Tambah ke Keranjang</button>
                 </form>
             </div>
         </div>
@@ -84,6 +84,6 @@
         @unless($compact)
             <input type="text" name="note" placeholder="Catatan" class="flex-1 border rounded-lg px-2 py-1 text-sm min-w-0">
         @endunless
-        <button type="submit" class="{{ $compact ? 'shrink-0 bg-orange-500 text-white text-sm px-3 py-1.5 rounded-lg' : 'shrink-0 bg-orange-500 text-white text-sm px-3 py-1.5 rounded-lg' }}">+</button>
+        <button type="submit" class="{{ $compact ? 'shrink-0 bg-teal-600 hover:bg-teal-700 text-white text-sm px-3 py-1.5 rounded-xl' : 'shrink-0 bg-teal-600 hover:bg-teal-700 text-white text-sm px-3 py-1.5 rounded-xl' }}">+</button>
     </form>
 @endif

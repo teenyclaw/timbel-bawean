@@ -100,6 +100,6 @@
         </div>
     @endif
 
-    <button type="submit" class="w-full bg-orange-500 text-white font-semibold py-3 rounded-xl">Kirim Pesanan</button>
+    <button type="submit" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-semibold py-3.5 rounded-xl transition">Kirim Pesanan</button>
 </form>
 @endsection

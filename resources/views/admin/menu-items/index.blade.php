@@ -42,12 +42,12 @@
                         @if($item->isLowStock()) · menipis @endif
                     </div>
                 @endif
-                <div class="flex gap-3 mt-2">
-                    <a href="{{ route('admin.menu-items.edit', $item) }}" class="text-xs text-blue-600">Varian</a>
+                <div class="flex flex-wrap gap-2 mt-3">
+                    <a href="{{ route('admin.menu-items.edit', $item) }}" class="ui-btn-primary text-xs py-1.5 px-3">Edit</a>
                     <form method="POST" action="{{ route('admin.menu-items.destroy', $item) }}" onsubmit="return confirm('Hapus menu?')">
-                    @csrf @method('DELETE')
-                    <button class="text-xs text-red-600">Hapus</button>
-                </form>
+                        @csrf @method('DELETE')
+                        <button type="submit" class="text-xs text-red-600 hover:text-red-700 font-medium px-2 py-1.5">Hapus</button>
+                    </form>
                 </div>
             </div>
         </div>

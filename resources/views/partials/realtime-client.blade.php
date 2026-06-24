@@ -80,7 +80,7 @@ window.QrPosRealtime = (function () {
 
         let actionHtml = '';
         if (column === 'pending') {
-            actionHtml = `<form method="POST" action="/kitchen/orders/${order.id}/start"><input type="hidden" name="_token" value="${csrfToken}"><button type="submit" class="text-sm bg-orange-600 hover:bg-orange-500 text-white px-3 py-2 rounded-lg font-medium">Mulai Masak</button></form>`;
+            actionHtml = `<form method="POST" action="/kitchen/orders/${order.id}/start"><input type="hidden" name="_token" value="${csrfToken}"><button type="submit" class="text-sm bg-teal-600 hover:bg-teal-700 text-white px-3 py-2 rounded-xl font-medium">Mulai Masak</button></form>`;
         } else if (column === 'cooking') {
             actionHtml = `<form method="POST" action="/kitchen/orders/${order.id}/ready"><input type="hidden" name="_token" value="${csrfToken}"><button type="submit" class="text-sm bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-2 rounded-lg font-medium">Siap Saji</button></form>`;
         } else {

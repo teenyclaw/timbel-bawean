@@ -22,6 +22,7 @@ use App\Http\Controllers\Customer\QrisController;
 use App\Http\Controllers\Customer\TableController as CustomerTableController;
 use App\Http\Controllers\Kitchen\KitchenDisplayController;
 use App\Http\Controllers\OutletSwitchController;
+use App\Http\Controllers\Pos\CashierController;
 use App\Http\Controllers\Pos\PaymentController;
 use App\Http\Controllers\Pos\QueueController;
 use App\Http\Controllers\Pos\QrisPaymentController;
@@ -67,7 +68,15 @@ Route::middleware(['auth', 'outlet'])->group(function () {
         ->name('admin.dashboard');
 
     Route::prefix('pos')->name('pos.')->group(function () {
-        Route::get('/', [QueueController::class, 'index'])->name('queue');
+        Route::redirect('/', '/pos/kasir');
+        Route::get('/kasir', [CashierController::class, 'index'])->name('cashier');
+        Route::post('/kasir/new', [CashierController::class, 'newOrder'])->name('cashier.new');
+        Route::post('/kasir/orders/{order}/items', [CashierController::class, 'addItem'])->name('cashier.items.add');
+        Route::patch('/kasir/orders/{order}/items/{item}', [CashierController::class, 'updateItem'])->name('cashier.items.update');
+        Route::delete('/kasir/orders/{order}/items/{item}', [CashierController::class, 'removeItem'])->name('cashier.items.remove');
+        Route::post('/kasir/orders/{order}/submit', [CashierController::class, 'submit'])->name('cashier.submit');
+        Route::post('/kasir/orders/{order}/pay', [CashierController::class, 'pay'])->name('cashier.pay');
+        Route::get('/antrian', [QueueController::class, 'index'])->name('queue');
         Route::get('/poll', [QueueController::class, 'poll'])->name('poll');
         Route::get('/tables', [PosTableController::class, 'index'])->name('tables.index');
         Route::post('/tables/{table}/open', [PosTableController::class, 'open'])->name('tables.open');
@@ -138,8 +147,11 @@ Route::middleware(['auth', 'outlet'])->group(function () {
         Route::delete('/outlets/{outlet}', [OutletController::class, 'destroy'])->name('outlets.destroy');
 
         Route::get('/users', [UserController::class, 'index'])->name('users.index');
+        Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
+        Route::post('/users', [UserController::class, 'store'])->name('users.store');
         Route::get('/users/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
         Route::put('/users/{user}', [UserController::class, 'update'])->name('users.update');
+        Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
 
         Route::get('/tables', [DiningTableController::class, 'index'])->name('tables.index');
         Route::post('/tables', [DiningTableController::class, 'store'])->name('tables.store');

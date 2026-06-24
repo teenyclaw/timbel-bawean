@@ -16,10 +16,10 @@ class RoleMiddleware
             }
 
             if (auth()->user()?->role === 'cashier') {
-                return redirect()->route('pos.queue')->with('error', 'Anda tidak memiliki akses ke halaman tersebut.');
+                return redirect()->route('pos.cashier')->with('error', 'Anda tidak memiliki akses ke halaman tersebut.');
             }
 
-            return redirect()->route('pos.queue')->with('error', 'Anda tidak memiliki akses ke halaman tersebut.');
+            return redirect()->route('pos.cashier')->with('error', 'Anda tidak memiliki akses ke halaman tersebut.');
         }
 
         return $next($request);

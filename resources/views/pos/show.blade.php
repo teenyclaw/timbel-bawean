@@ -4,7 +4,7 @@
 
 @section('content')
 <div class="max-w-2xl">
-    <a href="{{ $order->dining_table_id ? route('pos.tables.index') : route('pos.queue') }}" class="text-sm text-blue-600 mb-4 inline-block">← Kembali</a>
+    <a href="{{ $order->dining_table_id ? route('pos.tables.index') : route('pos.cashier') }}" class="text-sm text-blue-600 mb-4 inline-block">← Kembali</a>
 
     <div class="bg-white rounded-xl border p-5 mb-4">
         <div class="flex justify-between items-start mb-4">

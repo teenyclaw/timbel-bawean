@@ -3,7 +3,7 @@
 @section('title', 'Dashboard')
 
 @section('content')
-<h1 class="text-2xl font-bold mb-6">Dashboard</h1>
+<h1 class="ui-page-title mb-6">Dashboard</h1>
 
 @if(!empty($lowStock) && $lowStock->isNotEmpty())
     <div class="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-xl flex flex-wrap items-center justify-between gap-3">

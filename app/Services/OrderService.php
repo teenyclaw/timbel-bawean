@@ -89,6 +89,48 @@ class OrderService
         ]);
     }
 
+    public function counterOrderSessionKey(int $outletId): string
+    {
+        return 'pos_counter_order_' . $outletId;
+    }
+
+    public function clearCounterOrderSession(Outlet $outlet): void
+    {
+        session()->forget($this->counterOrderSessionKey($outlet->id));
+    }
+
+    public function getOrCreateCounterOrder(Outlet $outlet, ?User $user = null): Order
+    {
+        $key = $this->counterOrderSessionKey($outlet->id);
+        $orderId = session($key);
+
+        if ($orderId) {
+            $order = Order::where('id', $orderId)
+                ->where('outlet_id', $outlet->id)
+                ->whereNull('dining_table_id')
+                ->first();
+
+            if ($order && $this->isEditableBill($order)) {
+                return $order->load('items');
+            }
+        }
+
+        $order = Order::create([
+            'outlet_id' => $outlet->id,
+            'order_number' => $this->generateOrderNumber(),
+            'customer_name' => 'Walk-in',
+            'customer_phone' => '-',
+            'status' => OrderStatus::Open->value,
+            'source' => OrderSource::Waiter->value,
+            'created_by_user_id' => $user?->id,
+            'total' => 0,
+        ]);
+
+        session()->put($key, $order->id);
+
+        return $order->load('items');
+    }
+
     public function appendCartToOpenBill(DiningTable $table, OrderSource $source, ?User $user = null): Order
     {
         $cart = $this->cartService->get($outlet = $table->outlet, $table);

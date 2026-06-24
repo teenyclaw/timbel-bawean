@@ -26,12 +26,13 @@ class AppServiceProvider extends ServiceProvider
         Order::observe(OrderObserver::class);
         OrderItem::observe(OrderItemObserver::class);
 
-        View::composer('layouts.app', function ($view) {
+        $staffLayoutComposer = function ($view) {
             if (! auth()->check()) {
                 $view->with([
                     'currentShift' => null,
                     'currentOutlet' => null,
                     'accessibleOutlets' => collect(),
+                    'pendingCount' => 0,
                 ]);
 
                 return;
@@ -43,7 +44,11 @@ class AppServiceProvider extends ServiceProvider
                 'currentShift' => app(ShiftService::class)->currentShift(auth()->user(), $outlet->id),
                 'currentOutlet' => $outlet,
                 'accessibleOutlets' => $outletService->accessibleOutlets(auth()->user()),
+                'pendingCount' => app(\App\Services\OrderService::class)->pendingQuery($outlet->id)->count(),
             ]);
-        });
+        };
+
+        View::composer('layouts.app', $staffLayoutComposer);
+        View::composer('layouts.pos-cashier', $staffLayoutComposer);
     }
 }

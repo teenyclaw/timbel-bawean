@@ -4,14 +4,17 @@
 
 @section('content')
 <div class="flex items-center justify-between mb-6">
-    <h1 class="text-2xl font-bold">Meja & Open Bill</h1>
-    <a href="{{ route('pos.queue') }}" class="text-sm text-blue-600">Antrian pesanan →</a>
+    <div>
+        <h1 class="ui-page-title">Meja & Open Bill</h1>
+        <p class="ui-page-subtitle">Kelola bill aktif per meja</p>
+    </div>
+    <a href="{{ route('pos.queue') }}" class="text-sm text-teal-700 font-medium hover:text-teal-800">Antrian pesanan →</a>
 </div>
 
 <div class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
     @foreach($tables as $table)
         @php $bill = $table->activeBill(); @endphp
-        <div class="bg-white rounded-xl border p-4 {{ $bill ? 'border-purple-300 ring-1 ring-purple-100' : '' }}">
+        <div class="bg-white rounded-2xl border border-slate-200/90 p-4 {{ $bill ? 'border-teal-300/80 ring-2 ring-teal-100 shadow-sm' : 'shadow-sm' }}">
             <div class="flex justify-between items-start mb-3">
                 <div>
                     <div class="font-bold text-lg">{{ $table->name }}</div>
@@ -30,9 +33,9 @@
                     <div>{{ $bill->items->sum('qty') }} item · <strong>{{ $bill->formattedTotal() }}</strong></div>
                 </div>
                 <div class="flex flex-wrap gap-2">
-                    <a href="{{ route('pos.tables.order', $bill) }}" class="text-sm bg-slate-900 text-white px-3 py-1.5 rounded-lg">Waiter Order</a>
+                    <a href="{{ route('pos.tables.order', $bill) }}" class="text-sm bg-teal-600 hover:bg-teal-700 text-white px-3 py-1.5 rounded-xl font-medium transition">Waiter Order</a>
                     <form method="POST" action="{{ route('pos.tables.close', $bill) }}">@csrf
-                        <button type="submit" class="text-sm bg-green-600 text-white px-3 py-1.5 rounded-lg">Close & Bayar</button>
+                        <button type="submit" class="text-sm bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-xl font-medium transition">Close & Bayar</button>
                     </form>
                 </div>
             @else

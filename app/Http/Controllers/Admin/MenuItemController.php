@@ -69,7 +69,9 @@ class MenuItemController extends Controller
         abort_unless($menuItem->outlet_id === current_outlet_id(), 403);
         $menuItem->load(['category', 'modifierGroups.options']);
 
-        return view('admin.menu-items.edit', compact('menuItem'));
+        $categories = Category::where('outlet_id', current_outlet_id())->orderBy('sort_order')->get();
+
+        return view('admin.menu-items.edit', compact('menuItem', 'categories'));
     }
 
     public function update(Request $request, MenuItem $menuItem)

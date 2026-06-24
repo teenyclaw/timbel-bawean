@@ -33,7 +33,7 @@ class AuthenticatedSessionController extends Controller
 
         $home = auth()->user()->role === 'admin'
             ? route('admin.dashboard')
-            : route('pos.queue');
+            : route('pos.cashier');
 
         return redirect()->intended($home);
     }

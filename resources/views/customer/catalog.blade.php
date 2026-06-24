@@ -11,7 +11,7 @@
         @endif
     </div>
 @else
-    <p class="text-sm text-stone-600 mb-4">Pilih menu favorit Anda, lalu checkout.</p>
+    <p class="text-sm text-slate-600 mb-4">Pilih menu favorit Anda, lalu checkout.</p>
 @endif
 
 @foreach($categories as $category)
@@ -39,6 +39,6 @@
 @endif
 
 @if($categories->flatMap->menuItems->isEmpty() && $uncategorized->isEmpty())
-    <div class="text-center py-12 text-stone-500">Belum ada menu tersedia.</div>
+    <div class="text-center py-12 text-slate-500">Belum ada menu tersedia.</div>
 @endif
 @endsection
